@@ -1,0 +1,1 @@
+An edge/local AI running on llama.cpp that requires no internet connection and runs locally on the device. It eliminates the need for expensive tokens and is completely private with no data leaving the device.
