@@ -2,9 +2,12 @@
 import requests
 from config import LLAMA_SERVER_URL, MAX_TOKENS, SYSTEM_PROMPT
 
-def get_response(user_message, conversation_history=[]):
+def get_response(user_message, conversation_history = None):
     
-    # Build messages array with system prompt + history + new message
+    if conversation_history == None:
+        conversation_history = []
+    
+    # Build messages list with system prompt, history and new message
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     
     # Add conversation history so model remembers context
@@ -18,7 +21,7 @@ def get_response(user_message, conversation_history=[]):
     # Send request to llama.cpp server
     response = requests.post(
         f"{LLAMA_SERVER_URL}/v1/chat/completions",
-        json={
+        json = {
             "messages": messages,
             "max_tokens": MAX_TOKENS,
             "temperature": 0.7,

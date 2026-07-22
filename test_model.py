@@ -2,5 +2,6 @@
 from model import get_response
 
 print("Testing model connection...")
-response = get_response("Say hello in one sentence.")
+q = input("question?\n")
+response = get_response(q)
 print(f"Response: {response}")

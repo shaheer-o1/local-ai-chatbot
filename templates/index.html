@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sparrow.ai</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body class="bg-dark">
+    <div class="container py-5">
+        <h1 class="text-center mb-4">sparrow AI</h1>
+
+        <div id="chatbox" class="border rounded bg-dark p-3 mb-3 shadow-sm">
+            {% if history %}
+                {% for each in history %}
+            <div class="d-flex justify-content-end mb-2">
+                <div class="bg-primary text-white p-2 rounded-3">
+                    <p>{{ each.user }}</p>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-start mb-2">
+                <div class="bg-secondary text-white p-2 rounded-3">
+                    <p>{{ each.assistant }}</p>
+                </div>
+            </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="input-group mb-3" style="max-width: 500px; margin: auto;">
+                <textarea id="user_text" autocomplete="off" autofocus class="form-control" placeholder="say something..." name="user_text" rows="1"></textarea>
+                <button id="send_btn" class="btn btn-primary" type="button">Send</button>
+        </div>
+        <div class="text-center">
+                <button id="clear_btn" class="btn btn-outline-danger btn-sm" type="button">Clear Chat</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
