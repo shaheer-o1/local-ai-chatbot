@@ -1,3 +1,18 @@
+marked.setOptions({
+    highlight: function(code, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            return hljs.highlight(code, {language: lang}).value;
+        }
+        return hljs.highlightAuto(code).value;
+    },
+    breaks: true
+});
+
+function renderMarkdown(rawText) {
+    return marked.parse(rawText);
+}
+
+
 const chatbox = document.getElementById('chatbox');
 const user_text = document.getElementById('user_text');
 const send_btn = document.getElementById('send_btn');
@@ -12,11 +27,18 @@ function appendmsg(text, sender){
     const bubble = document.createElement('div');
     bubble.className = `${isuser ? 'bg-primary' : 'bg-secondary'} text-white p-2 rounded-3`;
 
-    const p = document.createElement('p');
-    p.className = `mb-0`;
-    p.textContent = text;
+    if (isuser) {
+        const p = document.createElement('p');
+        p.className = `mb-0`;
+        p.textContent = text;
+        bubble.appendChild(p);
+    } else {
+        bubble.innerHTML = marked.parse(text);
+        bubble.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightElement(block);
+        });
+    }
 
-    bubble.appendChild(p);
     wrapper.appendChild(bubble);
     chatbox.appendChild(wrapper);
 
@@ -35,7 +57,7 @@ async function sendmsg(){
         const response = await fetch('/chat', {
             method: 'POST',
             headers: {
-                'content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({input: text})
         });
@@ -49,7 +71,7 @@ async function sendmsg(){
         }
     } catch (error) {
         console.error('Network Error:', error);
-        appendMessage('Error: Could not connect to local server.', 'assistant');
+        appendmsg('Error: Could not connect to local server.', 'assistant');
     }
 }
 
