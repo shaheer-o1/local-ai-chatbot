@@ -29,6 +29,7 @@ async function sendmsg(){
 
     appendmsg(text, 'user');
     user_text.value = '';
+    user_text.style.height = 'auto';
 
     try {
         const response = await fetch('/chat', {
@@ -72,4 +73,8 @@ user_text.addEventListener('keydown', function(event) {
         event.preventDefault();
         sendmsg();
     }
+});
+user_text.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
 });

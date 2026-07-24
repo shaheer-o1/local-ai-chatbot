@@ -24,7 +24,7 @@ def get_response(user_message, conversation_history = None):
         json = {
             "messages": messages,
             "max_tokens": MAX_TOKENS,
-            "temperature": 0.6,
+            "temperature": 0.0,
             "stream": False
         }
     )
