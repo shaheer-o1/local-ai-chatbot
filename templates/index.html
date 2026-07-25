@@ -47,8 +47,21 @@
                 transform: translateY(0) scale(1);
             }
         }
+        @keyframes bubbleSlideOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.98);
+            }
+        }
         #chatbox > div {
-            animation: bubbleSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: bubbleSlideIn 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .bubbleExit {
+            animation: bubbleSlideOut 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         }
         #user_text {
             scrollbar-width: none;
@@ -65,7 +78,11 @@
             height: 100%;
         }
         #chatbox {
-            transition: flex-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+            transition: opacity 0.6s ease;
+        }
+        .input-container {
+            width: 100%;
+            transition: transform 0.78s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .notemptystate {
             justify-content: flex-start;
@@ -74,27 +91,28 @@
                 overflow-y: auto;
                 flex: 1;
                 min-height: 0;
-                animation: fadeChatbox 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                animation: fadeChatbox 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             }
             .input-container {
+                transform: translateY(0);
                 #greeting {
-                    animation: fadeGreeting 0.6s ease forwards;
+                    display: block;
+                    margin-left: -43px;
+                    animation: fadeGreeting 0.35s ease forwards;
                     overflow: hidden;
                 }
             }
         }
         .emptystate {
             #chatbox {
-                flex-grow: 0;
-                margin: 0 !important;
-                padding: 0 !important;
+                height: 0;
                 opacity: 0;
+                overflow: hidden;
                 pointer-events: none;
             }
             .input-container {
-                overflow: hidden !important;
                 margin-top: auto;
-                margin-bottom: auto;
+                transform: translateY(-10vh);
                 #greeting {
                     display: block;
                     margin-left: -43px;

@@ -95,18 +95,27 @@ async function sendmsg(){
 }
 
 async function clearchat() {
-    container.classList.remove('notemptystate');
-    container.classList.add('emptystate');
+
+    const historybubbles = chatbox.querySelectorAll('#chatbox > div');
+    historybubbles.forEach((bubble) => {
+        bubble.classList.add('bubbleExit');
+    });
+
     try {
         const response = await fetch('/clear');
         const data = await response.json();
 
         if (data.status === 'cleared') {
-            chatbox.innerHTML = '';
+            setTimeout(() => {
+                chatbox.innerHTML = '';
+            }, 600);
         }
     } catch (error) {
         console.error('clear error', error);
     }
+
+    container.classList.remove('notemptystate');
+    container.classList.add('emptystate');
 }
 
 send_btn.addEventListener('click', sendmsg);
