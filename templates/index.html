@@ -13,31 +13,114 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
     <style>
+        @keyframes fadeGreeting {
+            0% {
+                opacity: 1;
+                max-height: 80px;
+                margin-bottom: 24px;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                max-height: 0;
+                margin-bottom: 0;
+                transform: translateY(-10px);
+            }
+        }
+        @keyframes fadeChatbox {
+            0% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes bubbleSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        #chatbox > div {
+            animation: bubbleSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
         #user_text {
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-
         #user_text::-webkit-scrollbar {
             display: none;
+        }
+        #chatbox::-webkit-scrollbar {
+            display: none;
+        }
+        html, body {
+            overflow: hidden;
+            height: 100%;
+        }
+        #chatbox {
+            transition: flex-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+        }
+        .notemptystate {
+            justify-content: flex-start;
+            #chatbox {
+                scroll-behavior: smooth;
+                overflow-y: auto;
+                flex: 1;
+                min-height: 0;
+                animation: fadeChatbox 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+            .input-container {
+                #greeting {
+                    animation: fadeGreeting 0.6s ease forwards;
+                    overflow: hidden;
+                }
+            }
+        }
+        .emptystate {
+            #chatbox {
+                flex-grow: 0;
+                margin: 0 !important;
+                padding: 0 !important;
+                opacity: 0;
+                pointer-events: none;
+            }
+            .input-container {
+                overflow: hidden !important;
+                margin-top: auto;
+                margin-bottom: auto;
+                #greeting {
+                    display: block;
+                    margin-left: -43px;
+                }
+            }
+        }
+        #chatbox p:last-child {
+            margin-bottom: 0 !important;
         }
     </style>
 </head>
 <body class="bg-dark">
-    <div class="container py-5">
-        <h1 class="text-center mb-4">sparrow AI</h1>
+    <div id="maincontainer" class="container {% if not history %}emptystate{% else %}notemptystate{% endif %} d-flex flex-column h-100 py-3">
+        <h3 class="text-start mb-4">sparrow AI</h3>
 
-        <div id="chatbox" class="border rounded bg-dark p-3 mb-3 shadow-sm">
+        <div id="chatbox" class="rounded bg-dark p-3 mb-3 shadow-sm">
             {% if history %}
                 {% for each in history %}
             <div class="d-flex justify-content-end mb-2">
-                <div class="bg-primary text-white p-2 rounded-3">
+                <div class="usermsg bg-primary text-white p-2 rounded-3">
                     <p class="mb-0">{{ each.user }}</p>
                 </div>
             </div>
 
             <div class="d-flex justify-content-start mb-2">
-                <div class="bg-secondary text-white p-2 rounded-3">
+                <div class="assistantmsg bg-secondary text-white p-2 rounded-3">
                     <p class="mb-0">{{ each.assistant }}</p>
                 </div>
             </div>
@@ -45,11 +128,16 @@
             {% endif %}
         </div>
 
-        <div class="input-group mb-3" style="max-width: 500px; margin: auto; align-items: flex-end;">
-                <textarea id="user_text" autocomplete="off" autofocus class="form-control" placeholder="say something..." name="user_text" rows="1" style="resize: none; overflow-y: auto; min-height: 38px; max-height: 150px; border-radius: 10px;"></textarea>
+        <div class="input-container">
+            <h3 id="greeting" class="text-center mb-4">Hi there!</h3>
+        
+            <div class="input-group mb-3" style="max-width: 500px; margin: auto; align-items: flex-end;">
+                <textarea id="user_text" autocomplete="off" autofocus class="form-control sticky-bottom" placeholder="say something..." name="user_text" rows="1" style="resize: none; overflow-y: auto; min-height: 38px; max-height: 150px; border-radius: 10px;"></textarea>
                 <button id="send_btn" class="btn btn-primary" type="button" style="height: 38px; flex-shrink: 0; margin-left: 15px; border-radius: 10px;">Send</button>
+            </div>
         </div>
-        <div class="text-center">
+
+        <div class="text-end mt-auto">
                 <button id="clear_btn" class="btn btn-outline-danger btn-sm" type="button">Clear Chat</button>
         </div>
     </div>

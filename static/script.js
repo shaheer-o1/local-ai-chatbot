@@ -12,11 +12,30 @@ function renderMarkdown(rawText) {
     return marked.parse(rawText);
 }
 
+function fullyformat(text, bubble) {
+    bubble.innerHTML = renderMarkdown(text);
+    bubble.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+    });
+}
+
+function format_text_on_dom_load(targetclass) {
+    document.addEventListener('DOMContentLoaded', () => {
+        const historybubbles = document.querySelectorAll('.' + targetclass);
+
+        historybubbles.forEach((bubble) => {
+            const text = bubble.textContent.trim();
+            fullyformat(text, bubble);
+        });
+    });
+}
+
 
 const chatbox = document.getElementById('chatbox');
 const user_text = document.getElementById('user_text');
 const send_btn = document.getElementById('send_btn');
 const clear_btn = document.getElementById('clear_btn');
+const container = document.getElementById('maincontainer');
 
 function appendmsg(text, sender){
     const isuser = (sender === 'user');
@@ -32,11 +51,9 @@ function appendmsg(text, sender){
         p.className = `mb-0`;
         p.textContent = text;
         bubble.appendChild(p);
+        fullyformat(text, bubble);
     } else {
-        bubble.innerHTML = marked.parse(text);
-        bubble.querySelectorAll('pre code').forEach((block) => {
-            hljs.highlightElement(block);
-        });
+        fullyformat(text, bubble);
     }
 
     wrapper.appendChild(bubble);
@@ -46,6 +63,8 @@ function appendmsg(text, sender){
 }
 
 async function sendmsg(){
+    container.classList.remove('emptystate');
+    container.classList.add('notemptystate');
     const text = user_text.value.trim();
     if (!text) return;
 
@@ -76,6 +95,8 @@ async function sendmsg(){
 }
 
 async function clearchat() {
+    container.classList.remove('notemptystate');
+    container.classList.add('emptystate');
     try {
         const response = await fetch('/clear');
         const data = await response.json();
@@ -100,3 +121,6 @@ user_text.addEventListener('input', function() {
     this.style.height = 'auto';
     this.style.height = this.scrollHeight + 'px';
 });
+
+format_text_on_dom_load('assistantmsg');
+format_text_on_dom_load('usermsg');
