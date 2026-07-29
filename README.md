@@ -15,6 +15,6 @@ Then I wrote script.js where I dynamically added the user message and the bot's 
 
 helpers.py was taken from CS50's own finance pset from which I wanted to use the login_decorator but I scratched that idea, right now helpers.py has no function in the project.
 
-test_model.py was a file I initially created to just run the model in the terminal to confirm that it works before building the web app.
+test_model.py was a file I initially created to just run the model in the terminal to confirm that it works before building the web app. It contains code to take a user's message as input from the terminal, pass it to llama.cpp and print the answer back in the terminal.
 
 model.py is the file that actually talks to llama.cpp and sends to and gets the answer back from the model before passing it to app.py, it uses standard key values pairs for history making because that is the way llama.cpp is designed to work according to their documentation, they only choice I made in this was limited variable naming and the actual logical structure which is my own.
